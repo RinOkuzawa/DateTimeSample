@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,7 +29,7 @@ namespace DateTimeSample {
 
         private void btBefore_Click(object sender, EventArgs e) {
             var outputDateB = (now.AddDays(-(double)nudDayBeforeAfter.Value)).AddMonths(-(int)nudMonthBeforeAfter.Value); //メソッドチェーン
-            
+
 
             tbDayBeforeAfter.Text = outputDateB.ToShortDateString();
 
@@ -51,8 +53,10 @@ namespace DateTimeSample {
             DateTime birthday = new DateTime(monthCalendar1.SelectionStart.Year, monthCalendar1.SelectionStart.Month, monthCalendar1.SelectionStart.Day);
 
             Double interval = Math.Truncate((now - birthday).TotalDays);
-            
+
             tbBirthDays.Text = interval.ToString();
+
+            initButton();
 
         }
 
@@ -70,19 +74,33 @@ namespace DateTimeSample {
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-
+            initButton();
         }
-
-        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e) {
-            
-        }
-
+        //ファイル作成ボタン
         private void btFireWrite_Click(object sender, EventArgs e) {
             var lines = new string[]
                 {
-                    "祇園"
+                    "祇園精舎の鐘",
+                    "なん",
+                    "インド",
+                    "ねこ"
                 };
-
+            if (sfdFileSave.ShowDialog() == DialogResult.OK) {
+                File.WriteAllLines(sfdFileSave.FileName, lines);
+            }
+        }
+        //ファイル読込ボタン
+        private void btFileRead_Click(object sender, EventArgs e) {
+            if (ofdFileOpen.ShowDialog() == DialogResult.OK) {
+                var liness = File.ReadAllLines(ofdFileOpen.FileName);
+                foreach (var line in liness) {
+                    lbTextList.Items.Add(line);
+                }
+            }
         }
     }
 }
+            
+      
+    
+
